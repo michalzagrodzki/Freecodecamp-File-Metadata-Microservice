@@ -14,6 +14,9 @@ const { DEFAULT_PORT } = require("./utils/constants");
 // Controllers
 const file_controller = require("./domains/file/file.controller");
 
+// Validators
+const { validate_file } = require("./domains/file/file.middleware");
+
 app.use(cors());
 app.use(
   morgan(":method :url :status :res[content-length] - :response-time ms")
@@ -27,7 +30,12 @@ app.get("/", function (req, res) {
 });
 
 // file endpoints
-app.post("/api/fileanalyse", upload.single("upfile"), file_controller.upload);
+app.post(
+  "/api/fileanalyse",
+  upload.single("upfile"),
+  validate_file.upload,
+  file_controller.upload
+);
 
 const listener = app.listen(DEFAULT_PORT || process.env.PORT, function () {
   console.log(`Listening on port ${listener.address().port}`);
