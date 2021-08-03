@@ -5,6 +5,8 @@ const cors = require("cors");
 const morgan = require("morgan");
 
 const bodyParser = require("body-parser");
+const multer = require("multer");
+const upload = multer({ dest: "./public/data/uploads/" });
 
 // Basic Configuration
 const { DEFAULT_PORT } = require("./utils/constants");
@@ -25,7 +27,7 @@ app.get("/", function (req, res) {
 });
 
 // file endpoints
-app.post("/api/fileanalyse", file_controller.upload);
+app.post("/api/fileanalyse", upload.single("upfile"), file_controller.upload);
 
 const listener = app.listen(DEFAULT_PORT || process.env.PORT, function () {
   console.log(`Listening on port ${listener.address().port}`);
